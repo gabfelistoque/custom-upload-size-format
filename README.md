@@ -2,7 +2,6 @@
 Custom size limit and file formats for all users except admin
 
 
-functions.php
 ````
 function custom_upload_size_limit($size) {
     $user = wp_get_current_user();
