@@ -1,25 +1,21 @@
-function custom_upload_size_limit($size) {
+function custom_upload_settings($value, $type) {
     $user = wp_get_current_user();
 
     if (!in_array('administrator', (array) $user->roles)) {
-        $max_size = 2 * 1024 * 1024; // bytes (2 MB)
-        return $max_size;
-    } else {
-        return $size;
-    }
-}
-
-add_filter('upload_size_limit', 'custom_upload_size_limit');
-
-function custom_upload_mimes($mimes) {
-    $user = wp_get_current_user();
-    if (!in_array('administrator', (array) $user->roles)) {
-        $mimes = array(
-            'webp' => 'image/webp',
-        );
+        if ($type === 'size') {
+            return 2 * 1024 * 1024; // bytes (2 MB)
+        } elseif ($type === 'mimes') {        
+            return array('webp' => 'image/webp'); 
+        }
     }
 
-    return $mimes;
+    return $value;
 }
 
-add_filter('upload_mimes', 'custom_upload_mimes');
+add_filter('upload_size_limit', function ($size) {
+    return custom_upload_settings($size, 'size');
+});
+
+add_filter('upload_mimes', function ($mimes) {
+    return custom_upload_settings($mimes, 'mimes');
+});
